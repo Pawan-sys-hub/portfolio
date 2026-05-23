@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Personal portfolio website – showcasing projects, skills, and contact information." />
+  <title>Pawan Pokharel · AI Engineer</title>
+
+  <!-- ── Google Fonts ──────────────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- ── Remix Icons ───────────────────────────────────────────────────── -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"
+  />
+
+  <!-- ── Swiper.js ─────────────────────────────────────────────────────── -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+  />
+
+  <!-- ── Site Stylesheet ───────────────────────────────────────────────── -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <!--  NAVBAR                                                              -->
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <!-- Logo -->
+      <a href="#hero" class="nav__logo">
+        Pawan<span class="nav__logo-dot">.</span>
+      </a>
+
+      <!-- Desktop + Mobile links -->
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item"><a href="#hero"     class="nav__link active-link">Home</a></li>
+          <li class="nav__item"><a href="#about"    class="nav__link">About</a></li>
+          <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
+          <li class="nav__item"><a href="#contact"  class="nav__link">Contact</a></li>
+        </ul>
+        <!-- Mobile close button -->
+        <button class="nav__close" id="nav-close" aria-label="Close menu">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <!-- Right controls -->
+      <div class="nav__actions">
+        <!-- Theme toggle -->
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+          <i class="ri-moon-line" id="theme-icon"></i>
+        </button>
+        <!-- Hamburger (mobile only) -->
+        <button class="nav__toggle" id="nav-toggle" aria-label="Open menu">
+          <i class="ri-menu-line"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <!--  MAIN CONTENT                                                        -->
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- ── HERO ──────────────────────────────────────────────────────── -->
+    <section class="hero section" id="hero">
+
+      <!-- Floating decorative blobs -->
+      <div class="hero__blob hero__blob--1" aria-hidden="true"></div>
+      <div class="hero__blob hero__blob--2" aria-hidden="true"></div>
+
+      <div class="hero__container container grid">
+
+        <!-- Text block -->
+        <div class="hero__content">
+          <span class="hero__greeting">Hello, I'm</span>
+          <h1 class="hero__name">Pawan Pokharel</h1>
+          <h2 class="hero__profession">
+            <span class="hero__typed" id="typed-text"></span>
+            <span class="hero__cursor" aria-hidden="true">|</span>
+          </h2>
+          <p class="hero__description">
+            I build intelligent systems and the seamless interfaces that power them —
+           from training and integrating AI models to crafting responsive frontend code and high-fidelity  designs
+          </p>
+
+          <div class="hero__buttons">
+            <a href="#contact" class="btn btn--primary">
+              <i class="ri-send-plane-line"></i> Hire Me
+            </a>
+            <a href="#projects" class="btn btn--outline">
+              <i class="ri-eye-line"></i> My Work
+            </a>
+          </div>
+
+          <!-- Social links -->
+          <div class="hero__socials">
+            <a href="https://github.com/Pawan-sys-hub"   target="_blank" rel="noopener" class="hero__social-link" aria-label="GitHub">
+              <i class="ri-github-fill"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/pawanpokharel523/" target="_blank" rel="noopener" class="hero__social-link" aria-label="LinkedIn">
+              <i class="ri-linkedin-box-fill"></i>
+            </a>
+            <a href="https://x.com/PawanPo07215910"  target="_blank" rel="noopener" class="hero__social-link" aria-label="Twitter/X">
+              <i class="ri-twitter-x-line"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Avatar / image -->
+        <div class="hero__image-wrapper">
+          <div class="hero__image-ring" aria-hidden="true"></div>
+          <img
+            src="{{ url_for('static', filename='img/pawan.jpeg') }}"
+            alt="Pawan Pokharel – portrait"
+            class="hero__img"
+            loading="eager"
+          />
+          <!-- Floating chips -->
+          <div class="hero__chip hero__chip--1">
+            <i class="ri-code-s-slash-line"></i> 5+ Projects
+          </div>
+          <div class="hero__chip hero__chip--2">
+            <i class="ri-star-fill"></i> 5-Star Rated
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scroll indicator -->
+      <a href="#about" class="hero__scroll" aria-label="Scroll to about">
+        <i class="ri-arrow-down-s-line"></i>
+      </a>
+    </section>
+
+    <!-- ── ABOUT / QUALIFICATIONS ─────────────────────────────────────── -->
+    <section class="about section" id="about">
+      <div class="container">
+
+        <span class="section__label">Who I Am</span>
+        <h2 class="section__title">About Me</h2>
+
+        <div class="about__grid grid">
+
+          <!-- Profile card -->
+          <div class="about__card">
+            <img
+              src="{{ url_for('static', filename='img/pawan.jpeg') }}"
+              alt="Pawan Pokharel – workspace"
+              class="about__img"
+              loading="lazy"
+            />
+            <div class="about__stats">
+              <div class="about__stat">
+                <span class="about__stat-num">6+</span>
+                <span class="about__stat-label">Months Exp.</span>
+              </div>
+              <div class="about__stat">
+                <span class="about__stat-num">5+</span>
+                <span class="about__stat-label">Projects</span>
+              </div>
+              <div class="about__stat">
+                <span class="about__stat-num">1+</span>
+                <span class="about__stat-label">Clients</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="about__tabs-wrapper">
+            <p class="about__bio">
+             AI Engineer & Frontend Developer
+              Designing seamless user experiences in Figma and bringing them to life with clean,
+             modern frontend code and AI integration. Bridging the gap between beautiful design and intelligent technology.
+            </p>
+
+            <!-- Tab buttons -->
+            <div class="tabs" role="tablist" aria-label="About sections">
+              <button class="tab-btn active" data-tab="skills"        role="tab" aria-selected="true"  aria-controls="tab-skills">Skills</button>
+              <button class="tab-btn"        data-tab="education"     role="tab" aria-selected="false" aria-controls="tab-education">Education</button>
+              <button class="tab-btn"        data-tab="experience"    role="tab" aria-selected="false" aria-controls="tab-experience">Experience</button>
+            </div>
+
+            <!-- Tab panels -->
+            <div class="tab-panels">
+
+              <!-- Skills -->
+              <div class="tab-panel active" id="tab-skills" role="tabpanel">
+                <div class="skills-grid">
+                  
+                                          
+                  <div class="skill-item"><i class="devicon-python-plain"></i><span>Python</span></div>
+                  <div class="skill-item"><i class="ri-html5-fill"></i><span>HTML5</span></div>
+                  <div class="skill-item"><i class="ri-css3-fill"></i><span>CSS3</span></div>
+                  <div class="skill-item"><i class="ri-javascript-fill"></i><span>JavaScript</span></div>
+                  <div class="skill-item"><i class="ri-figma-fill"></i> <span>Figma</span></div>
+                                            
+ 
+
+                  <div class="skill-item"><i class="ri-database-2-fill"></i><span>MySQL</span></div>
+                  <div class="skill-item"><i class="ri-git-branch-fill"></i><span>Git</span></div>
+            
+
+                </div>
+              </div>
+
+              <!-- Education -->
+              <div class="tab-panel" id="tab-education" role="tabpanel" hidden>
+                <div class="timeline">
+                  <div class="timeline__item">
+                    <span class="timeline__date">2017 – 2021</span>
+                    <h4 class="timeline__title">B.Sc. Computer Science</h4>
+                    <p class="timeline__sub">State University of Technology</p>
+                  </div>
+                  <div class="timeline__item">
+                    <span class="timeline__date">2023</span>
+                    <h4 class="timeline__title">AWS Solutions Architect Associate</h4>
+                    <p class="timeline__sub">Amazon Web Services</p>
+                  </div>
+                  <div class="timeline__item">
+                    <span class="timeline__date">2024</span>
+                    <h4 class="timeline__title">Google Professional Cloud Developer</h4>
+                    <p class="timeline__sub">Google Cloud</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Experience -->
+              <div class="tab-panel" id="tab-experience" role="tabpanel" hidden>
+                <div class="timeline">
+                  <div class="timeline__item">
+                    <span class="timeline__date">2021 – 2023</span>
+                    <h4 class="timeline__title">Junior Full-Stack Developer</h4>
+                    <p class="timeline__sub">TechStartup Inc. · Remote</p>
+                  </div>
+                  <div class="timeline__item">
+                    <span class="timeline__date">2023 – 2024</span>
+                    <h4 class="timeline__title">Mid-Level Software Engineer</h4>
+                    <p class="timeline__sub">Digital Agency Co. · New York</p>
+                  </div>
+                  <div class="timeline__item">
+                    <span class="timeline__date">2024 – Present</span>
+                    <h4 class="timeline__title">Senior Full-Stack Developer &amp; Freelancer</h4>
+                    <p class="timeline__sub">Self-employed · Worldwide</p>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /tab-panels -->
+          </div><!-- /about__tabs-wrapper -->
+        </div><!-- /about__grid -->
+      </div>
+    </section>
+
+    <!-- ── PROJECTS ────────────────────────────────────────────────────── -->
+    <section class="projects section" id="projects">
+      <div class="container">
+
+        <span class="section__label">My Work</span>
+        <h2 class="section__title">Featured Projects</h2>
+
+        <!-- Filter buttons -->
+        <div class="filter-btns" id="filter-btns" role="group" aria-label="Filter projects">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Web App">Web App</button>
+          <button class="filter-btn" data-filter="Mobile">Mobile</button>
+          <button class="filter-btn" data-filter="Design">Design</button>
+        </div>
+
+        <!-- Loading state -->
+        <div class="projects__loader" id="projects-loader" aria-live="polite">
+          <div class="spinner" aria-label="Loading projects…"></div>
+        </div>
+
+        <!-- Grid – populated dynamically via JS -->
+        <div class="projects__grid" id="projects-grid" role="list"></div>
+
+        <!-- Error state -->
+        <p class="projects__error hidden" id="projects-error">
+          <i class="ri-error-warning-line"></i> Failed to load projects. Please refresh.
+        </p>
+
+      </div>
+
+      <!-- ── Slide-out Project Details Drawer ───────────────────────────── -->
+      <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+      <aside
+        class="project-drawer"
+        id="project-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawer-title"
+        aria-hidden="true"
+      >
+        <button class="drawer__close" id="drawer-close" aria-label="Close project details">
+          <i class="ri-close-line"></i>
+        </button>
+        <div class="drawer__body">
+          <img src="" alt="" class="drawer__img" id="drawer-img" />
+          <div class="drawer__meta">
+            <span class="drawer__category" id="drawer-category"></span>
+            <h3 class="drawer__title" id="drawer-title"></h3>
+            <p class="drawer__description" id="drawer-description"></p>
+            <div class="drawer__tech" id="drawer-tech"></div>
+            <div class="drawer__links">
+              <a href="#" class="btn btn--primary btn--sm" id="drawer-live" target="_blank" rel="noopener">
+                <i class="ri-external-link-line"></i> Live Demo
+              </a>
+              <a href="#" class="btn btn--outline btn--sm" id="drawer-git" target="_blank" rel="noopener">
+                <i class="ri-github-fill"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ── CONTACT ─────────────────────────────────────────────────────── -->
+    <section class="contact section" id="contact">
+      <div class="container">
+
+        <span class="section__label">Get In Touch</span>
+        <h2 class="section__title">Contact Me</h2>
+
+        <div class="contact__grid grid">
+
+          <!-- Info column -->
+          <div class="contact__info">
+
+            <div class="contact__info-item">
+              <div class="contact__icon-wrap">
+                <i class="ri-map-pin-2-fill"></i>
+              </div>
+              <div>
+                <h4 class="contact__info-label">Location</h4>
+                <span class="contact__info-value">Kalimati, Kathmandu, Nepal</span>
+              </div>
+            </div>
+
+            <div class="contact__info-item">
+              <div class="contact__icon-wrap">
+                <i class="ri-phone-fill"></i>
+              </div>
+              <div>
+                <h4 class="contact__info-label">Phone</h4>
+                <span class="contact__info-value">9866996887</span>
+              </div>
+            </div>
+
+            <!-- Email row with clipboard copy -->
+            <div class="contact__info-item contact__email-row" id="email-copy-row">
+              <div class="contact__icon-wrap">
+                <i class="ri-mail-fill"></i>
+              </div>
+              <div>
+                <h4 class="contact__info-label">Email</h4>
+                <span class="contact__info-value" id="contact-email">pawanpokharel523@gmail.com</span>
+              </div>
+              <button
+                class="copy-btn"
+                id="copy-email-btn"
+                aria-label="Copy email address"
+                data-email="pawanpokharel523@gmail.com"
+              >
+                <i class="ri-file-copy-line" id="copy-icon"></i>
+              </button>
+              <span class="copy-tooltip" id="copy-tooltip">Copied!</span>
+            </div>
+
+          </div>
+
+          <!-- Form column -->
+          <form class="contact__form" id="contact-form" novalidate>
+
+            <!-- Alert banner (shown on submit response) -->
+            <div class="form-alert hidden" id="form-alert" role="alert" aria-live="assertive"></div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name">Full Name <span aria-hidden="true">*</span></label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name="name"
+                  placeholder="Your full name"
+                  required
+                  minlength="2"
+                  maxlength="120"
+                  autocomplete="name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="contact-email-input">Email Address <span aria-hidden="true">*</span></label>
+                <input
+                  type="email"
+                  id="contact-email-input"
+                  name="email"
+                  placeholder="youremail@example.com"
+                  required
+                  maxlength="180"
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-subject">Subject <span aria-hidden="true">*</span></label>
+              <input
+                type="text"
+                id="contact-subject"
+                name="subject"
+                placeholder="Project inquiry…"
+                required
+                minlength="3"
+                maxlength="200"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message">Message <span aria-hidden="true">*</span></label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows="6"
+                placeholder="Tell me about your project…"
+                required
+                minlength="10"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--full" id="submit-btn">
+              <i class="ri-send-plane-2-fill"></i>
+              <span id="submit-label">Send Message</span>
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <!--  FOOTER                                                              -->
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="#hero" class="footer__logo">Pawan<span>.</span></a>
+      <p class="footer__copy">
+        &copy; <span id="footer-year"></span> Pawan Pokharel.Python.
+      </p>
+      <a href="#hero" class="footer__scroll-top" aria-label="Back to top">
+        <i class="ri-arrow-up-line"></i>
+      </a>
+    </div>
+  </footer>
+
+  <!-- ── Scripts ────────────────────────────────────────────────────────── -->
+
+  <!-- Swiper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- ScrollReveal.js -->
+  <script src="https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
+
+  <!-- Site JS -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
