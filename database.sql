@@ -1,7 +1,7 @@
 -- ============================================================
 -- Portfolio Website Database Schema
 -- Run against your existing 'pawan' database:
---   mysql -u root -p pawan < database.sql
+--   mysql -u pawan -p pawan < database.sql
 -- ============================================================
 
 USE pawan;
