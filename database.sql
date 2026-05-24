@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 -- ============================================================
 -- Seed Data: 3 realistic sample projects
 -- ============================================================
-INSERT INTO projects (title, category, description, image_url, live_link, git_link, technologies_used) VALUES
-(
-   
-),
+
+INSERT INTO projects (title, category, description, image_url, live_link, git_link, technologies_used)
+VALUES
+('Portfolio Website', 'Web App', 'My personal portfolio', '', '', '', 'Flask,MySQL,HTML,CSS');

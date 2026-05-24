@@ -1,56 +1,39 @@
-"""
-app.py – Portfolio Website Backend
-Flask + MySQL (Cloud Ready) + CORS + python-dotenv
-"""
-
 import os
 import re
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 import mysql.connector
-from mysql.connector import Error as MySQLError
 from dotenv import load_dotenv
 
-# ── Load environment variables ─────────────────────────────
 load_dotenv()
 
-# ── App setup ───────────────────────────────────────────────
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# ── EMAIL VALIDATION ────────────────────────────────────────
-_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+# ── EMAIL VALIDATION ─────────────────────────────
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
-def is_valid_email(email: str) -> bool:
-    return bool(_EMAIL_RE.match(email))
+def is_valid_email(email):
+    return bool(EMAIL_RE.match(email))
 
-
-# ── DATABASE CONNECTION (CLOUD SAFE) ───────────────────────
+# ── DATABASE CONNECTION (FINAL FIX) ─────────────
 def get_db_connection():
-    """Connect to MySQL (Aiven / Cloud / Local fallback)."""
-    try:
-        return mysql.connector.connect(
-            host=os.getenv("DB_HOST"),
-            port=int(os.getenv("DB_PORT", 3306)),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
-            charset="utf8mb4",
-            ssl_disabled=False  # important for Aiven cloud
-        )
-    except MySQLError as err:
-        print("Database connection failed:", err)
-        raise
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        ssl_ca=None,
+        ssl_verify_cert=False
+    )
 
-
-# ── ROUTES ──────────────────────────────────────────────────
-
+# ── HOME ─────────────────────────────────────────
 @app.route("/")
 def index():
     return render_template("index.html")
 
-
-# ── GET PROJECTS ────────────────────────────────────────────
+# ── PROJECTS API ─────────────────────────────────
 @app.route("/api/projects", methods=["GET"])
 def get_projects():
     try:
@@ -67,39 +50,38 @@ def get_projects():
 
         rows = cursor.fetchall()
 
-        # convert CSV → list
         for row in rows:
             raw = row.get("technologies_used") or ""
-            row["technologies"] = [t.strip() for t in raw.split(",") if t.strip()]
+            row["technologies"] = [x.strip() for x in raw.split(",") if x.strip()]
             row.pop("technologies_used", None)
 
         cursor.close()
         conn.close()
 
-        return jsonify({"success": True, "data": rows}), 200
+        return jsonify({"success": True, "data": rows})
 
-    except Exception as err:
-        return jsonify({"success": False, "message": str(err)}), 500
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
-
-# ── CONTACT FORM ────────────────────────────────────────────
+# ── CONTACT API ──────────────────────────────────
 @app.route("/api/contact", methods=["POST"])
-def post_contact():
-    body = request.get_json(silent=True)
+def contact():
+    data = request.get_json()
 
-    if not body:
+    if not data:
         return jsonify({"success": False, "message": "Invalid JSON"}), 400
 
-    name = (body.get("name") or "").strip()
-    email = (body.get("email") or "").strip()
-    subject = (body.get("subject") or "").strip()
-    message = (body.get("message") or "").strip()
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    subject = data.get("subject", "").strip()
+    message = data.get("message", "").strip()
 
-    # validation
     if len(name) < 2:
         return jsonify({"success": False, "message": "Name too short"}), 422
+
     if not is_valid_email(email):
         return jsonify({"success": False, "message": "Invalid email"}), 422
+
     if len(message) < 10:
         return jsonify({"success": False, "message": "Message too short"}), 422
 
@@ -116,19 +98,12 @@ def post_contact():
         cursor.close()
         conn.close()
 
-        return jsonify({
-            "success": True,
-            "message": "Message sent successfully!"
-        }), 201
+        return jsonify({"success": True, "message": "Message sent"}), 201
 
-    except Exception as err:
-        return jsonify({"success": False, "message": str(err)}), 500
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
-# ── RUN APP ─────────────────────────────────────────────────
+# ── RUN ──────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(
-        host=os.getenv("FLASK_HOST", "0.0.0.0"),
-        port=int(os.getenv("FLASK_PORT", 5000)),
-        debug=False
-    )
+    app.run(host="0.0.0.0", port=5000, debug=False)
