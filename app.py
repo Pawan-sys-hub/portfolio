@@ -1,5 +1,8 @@
 import os
 import re
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 # pyrefly: ignore [missing-import]
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
@@ -76,6 +79,38 @@ def get_projects():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
+# ── GMAIL EMAIL NOTIFICATION ─────────────────────
+def send_contact_email(name, sender_email, subject, message):
+    """Forward contact form submission to Gmail inbox."""
+    gmail_user = os.getenv("GMAIL_USER")
+    gmail_pass = os.getenv("GMAIL_APP_PASSWORD")
+
+    if not gmail_user or not gmail_pass:
+        return  # Email not configured — skip silently
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = f"[Portfolio Contact] {subject or 'New Message'}"
+    msg["From"]    = gmail_user
+    msg["To"]      = gmail_user
+    msg["Reply-To"] = sender_email
+
+    body = f"""\
+New contact form submission from your portfolio:
+
+Name    : {name}
+Email   : {sender_email}
+Subject : {subject}
+
+Message:
+{message}
+"""
+    msg.attach(MIMEText(body, "plain"))
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(gmail_user, gmail_pass)
+        server.sendmail(gmail_user, gmail_user, msg.as_string())
+
 # ── CONTACT API ──────────────────────────────────
 @app.route("/api/contact", methods=["POST"])
 def contact():
@@ -84,8 +119,8 @@ def contact():
     if not data:
         return jsonify({"success": False, "message": "Invalid JSON"}), 400
 
-    name = data.get("name", "").strip()
-    email = data.get("email", "").strip()
+    name    = data.get("name", "").strip()
+    email   = data.get("email", "").strip()
     subject = data.get("subject", "").strip()
     message = data.get("message", "").strip()
 
@@ -110,6 +145,12 @@ def contact():
         conn.commit()
         cursor.close()
         conn.close()
+
+        # Send Gmail notification (non-blocking — won't fail the request)
+        try:
+            send_contact_email(name, email, subject, message)
+        except Exception:
+            pass  # Email failure is silent — DB save already succeeded
 
         return jsonify({"success": True, "message": "Message sent"}), 201
 

@@ -41,4 +41,5 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 
 INSERT INTO projects (title, category, description, image_url, live_link, git_link, technologies_used)
 VALUES
-('Portfolio Website', 'Web App', 'My personal portfolio', '', '', '', 'Flask,MySQL,HTML,CSS');
+('Portfolio Website', 'Web App', 'My personal portfolio website built with Flask and MySQL, featuring a responsive design, project showcase, and contact form.', '', 'https://pawan-pokharel.onrender.com', 'https://github.com/Pawan-sys-hub/portfolio', 'Flask,MySQL,HTML,CSS,JavaScript'),
+('Community Issue Tracker', 'Web App', 'A platform where users can report road damage, water leakage, electricity issues, and track issue progress.', 'static/img/communitytracker.png', 'https://github.com/Pawan-sys-hub/Community-Issue-tracker-', 'https://github.com/Pawan-sys-hub/Community-Issue-tracker-', 'HTML,CSS,JavaScript,PHP,MySQL');
