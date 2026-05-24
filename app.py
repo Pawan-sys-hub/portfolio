@@ -16,27 +16,29 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 def is_valid_email(email):
     return bool(EMAIL_RE.match(email))
 
-# ── DATABASE CONNECTION (AIVEN CLOUD FIX) ────────
+# ── DATABASE CONNECTION (AIVEN CLOUD) ────────────
 def get_db_connection():
-    # If using the raw URI configuration
-    db_uri = os.getenv("DB_URI")
-    
-    if db_uri:
-        # standard parser mapping for URI strings
-        config = mysql.connector.utils.parse_connection_arguments(db_uri)
-        # Force SSL requirement for Aiven Cloud
-        config['ssl_disabled'] = False
-        return mysql.connector.connect(**config)
-    
-    # Fallback to granular environment variables
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        port=int(os.getenv("DB_PORT", 28623)),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME"),
-        ssl_disabled=False # Forces Python to connect using SSL (Required by Aiven)
+        host=os.getenv("DB_HOST", "localhost"),
+        port=int(os.getenv("DB_PORT", 3306)),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD", ""),
+        database=os.getenv("DB_NAME", "defaultdb"),
+        ssl_disabled=False,
+        ssl_verify_cert=False,
+        ssl_verify_identity=False,
+        connection_timeout=10,
     )
+
+# ── HEALTH CHECK ─────────────────────────────────
+@app.route("/health")
+def health():
+    try:
+        conn = get_db_connection()
+        conn.close()
+        return jsonify({"status": "ok", "db": "connected"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "db": str(e)}), 500
 
 # ── HOME ─────────────────────────────────────────
 @app.route("/")
