@@ -40,29 +40,5 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 -- ============================================================
 INSERT INTO projects (title, category, description, image_url, live_link, git_link, technologies_used) VALUES
 (
-    'ShopNest E-Commerce',
-    'Web App',
-    'A full-featured online store with product catalogue, cart management, Stripe payment integration, and an admin dashboard for inventory control. Achieved sub-2-second page loads via Redis caching.',
-    'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80',
-    'https://shopnest.example.com',
-    'https://github.com/yourname/shopnest',
-    'React, Node.js, Express, MongoDB, Redis, Stripe API, TailwindCSS'
+   
 ),
-(
-    'TaskFlow – Project Manager',
-    'Web App',
-    'A Kanban-style project management tool supporting real-time drag-and-drop columns, team member assignment, due-date reminders via email, and activity logs. Built with WebSockets for instant collaboration.',
-    'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80',
-    'https://taskflow.example.com',
-    'https://github.com/yourname/taskflow',
-    'Vue 3, Python, FastAPI, PostgreSQL, Socket.IO, Docker, AWS S3'
-),
-(
-    'WeatherLens Mobile App',
-    'Mobile',
-    'A cross-platform weather application delivering hyper-local 7-day forecasts, animated weather conditions, push notifications for severe alerts, and an interactive radar map overlay.',
-    'https://images.unsplash.com/photo-1504608524841-42584120d693?w=800&q=80',
-    'https://weatherlens.example.com',
-    'https://github.com/yourname/weatherlens',
-    'React Native, Expo, OpenWeatherMap API, AsyncStorage, Lottie'
-);
