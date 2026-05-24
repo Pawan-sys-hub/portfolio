@@ -478,7 +478,42 @@
 })();
 
 /* ============================================================
-   8. FOOTER YEAR
+   8. ABOUT TABS (Skills / Education / Experience)
+   ============================================================ */
+(function initAboutTabs() {
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabPanels = document.querySelectorAll(".tab-panel");
+
+  if (!tabBtns.length) return;
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.tab;
+
+      // Update button states
+      tabBtns.forEach(b => {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+
+      // Show matching panel, hide others
+      tabPanels.forEach(panel => {
+        if (panel.id === `tab-${target}`) {
+          panel.classList.add("active");
+          panel.removeAttribute("hidden");
+        } else {
+          panel.classList.remove("active");
+          panel.setAttribute("hidden", "");
+        }
+      });
+    });
+  });
+})();
+
+/* ============================================================
+   9. FOOTER YEAR
    ============================================================ */
 (function setFooterYear() {
   const yearEl = document.getElementById("footer-year");
