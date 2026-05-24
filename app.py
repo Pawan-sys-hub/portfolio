@@ -16,16 +16,26 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 def is_valid_email(email):
     return bool(EMAIL_RE.match(email))
 
-# ── DATABASE CONNECTION (FINAL FIX) ─────────────
+# ── DATABASE CONNECTION (AIVEN CLOUD FIX) ────────
 def get_db_connection():
+    # If using the raw URI configuration
+    db_uri = os.getenv("DB_URI")
+    
+    if db_uri:
+        # standard parser mapping for URI strings
+        config = mysql.connector.utils.parse_connection_arguments(db_uri)
+        # Force SSL requirement for Aiven Cloud
+        config['ssl_disabled'] = False
+        return mysql.connector.connect(**config)
+    
+    # Fallback to granular environment variables
     return mysql.connector.connect(
         host=os.getenv("DB_HOST"),
-        port=int(os.getenv("DB_PORT")),
+        port=int(os.getenv("DB_PORT", 28623)),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
-        ssl_ca=None,
-        ssl_verify_cert=False
+        ssl_disabled=False # Forces Python to connect using SSL (Required by Aiven)
     )
 
 # ── HOME ─────────────────────────────────────────
