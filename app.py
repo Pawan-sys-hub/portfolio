@@ -106,12 +106,14 @@ Message:
 """
     msg.attach(MIMEText(body, "plain"))
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
+        server.ehlo()
         server.starttls()
+        server.ehlo()
         server.login(gmail_user, gmail_pass)
         server.sendmail(gmail_user, gmail_user, msg.as_string())
 
-# ── CONTACT API ──────────────────────────────────
+# ── CONTACT API ──────────────────────────────────────────────
 @app.route("/api/contact", methods=["POST"])
 def contact():
     data = request.get_json()
@@ -133,29 +135,44 @@ def contact():
     if len(message) < 10:
         return jsonify({"success": False, "message": "Message too short"}), 422
 
+    # ── Step 1: Send email (primary action) ───────────────────
+    email_sent = False
+    email_error = None
+    try:
+        send_contact_email(name, email, subject, message)
+        email_sent = True
+    except Exception as e:
+        email_error = str(e)
+
+    # ── Step 2: Save to DB (bonus — optional) ─────────────────
+    db_error = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
         cursor.execute("""
             INSERT INTO contact_messages (name, email, subject, message)
             VALUES (%s, %s, %s, %s)
         """, (name, email, subject, message))
-
         conn.commit()
         cursor.close()
         conn.close()
-
-        # Send Gmail notification (non-blocking — won't fail the request)
-        try:
-            send_contact_email(name, email, subject, message)
-        except Exception:
-            pass  # Email failure is silent — DB save already succeeded
-
-        return jsonify({"success": True, "message": "Message sent"}), 201
-
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+        db_error = str(e)
+
+    # ── Step 3: Decide response ────────────────────────────────
+    if email_sent:
+        # Email delivered — success regardless of DB state
+        return jsonify({"success": True, "message": "Message sent! I'll get back to you soon."}), 201
+    elif db_error is None:
+        # DB saved but email failed — still a partial success
+        return jsonify({"success": True, "message": "Message received! (Email notification delayed)"}), 201
+    else:
+        # Both failed — return error
+        return jsonify({
+            "success": False,
+            "message": "Could not send your message right now. Please try emailing directly.",
+            "detail": email_error
+        }), 500
 
 
 # ── RUN ──────────────────────────────────────────
