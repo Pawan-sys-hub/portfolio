@@ -1,9 +1,7 @@
 import os
 import re
-import ssl
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import json
+import urllib.request
 # pyrefly: ignore [missing-import]
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
@@ -80,37 +78,45 @@ def get_projects():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
-# ── GMAIL EMAIL NOTIFICATION ─────────────────────
+# ── RESEND EMAIL NOTIFICATION ────────────────────
 def send_contact_email(name, sender_email, subject, message):
-    """Forward contact form submission to Gmail inbox."""
-    gmail_user = os.getenv("GMAIL_USER")
-    gmail_pass = os.getenv("GMAIL_APP_PASSWORD")
+    """Forward contact form submission to Gmail via Resend API."""
+    api_key  = os.getenv("RESEND_API_KEY")
+    to_email = os.getenv("GMAIL_USER")  # your Gmail address
 
-    if not gmail_user or not gmail_pass:
-        return  # Email not configured — skip silently
+    if not api_key or not to_email:
+        raise ValueError("RESEND_API_KEY or GMAIL_USER not set")
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"[Portfolio Contact] {subject or 'New Message'}"
-    msg["From"]    = gmail_user
-    msg["To"]      = gmail_user
-    msg["Reply-To"] = sender_email
-
-    body = f"""\
-New contact form submission from your portfolio:
+    body = f"""New contact form submission from your portfolio:
 
 Name    : {name}
 Email   : {sender_email}
 Subject : {subject}
 
 Message:
-{message}
-"""
-    msg.attach(MIMEText(body, "plain"))
+{message}"""
 
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context, timeout=10) as server:
-        server.login(gmail_user, gmail_pass)
-        server.sendmail(gmail_user, gmail_user, msg.as_string())
+    payload = json.dumps({
+        "from": "Portfolio Contact <onboarding@resend.dev>",
+        "to":   [to_email],
+        "subject": f"[Portfolio Contact] {subject or 'New Message'}",
+        "text": body,
+        "reply_to": sender_email,
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type":  "application/json",
+        },
+        method="POST",
+    )
+
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        if resp.status not in (200, 201):
+            raise RuntimeError(f"Resend API error: {resp.status}")
 
 # ── CONTACT API ──────────────────────────────────────────────
 @app.route("/api/contact", methods=["POST"])
