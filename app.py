@@ -1,5 +1,6 @@
 import os
 import re
+import ssl
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -106,10 +107,8 @@ Message:
 """
     msg.attach(MIMEText(body, "plain"))
 
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context, timeout=10) as server:
         server.login(gmail_user, gmail_pass)
         server.sendmail(gmail_user, gmail_user, msg.as_string())
 
